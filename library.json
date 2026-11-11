@@ -1,0 +1,40 @@
+{
+  "name": "PixelEngine",
+  "version": "0.1.0",
+  "description": "Layout-agnostic LED animation engine for NeoPixel strips and rings. Drivers for Adafruit NeoPixel, FastLED, and ESP-IDF led_strip.",
+  "keywords": [
+    "led",
+    "neopixel",
+    "fastled",
+    "animation",
+    "strip",
+    "ring",
+    "esp-idf",
+    "ws2812"
+  ],
+  "authors": [
+    {
+      "name": "Madhukar Temba",
+      "email": "madhusmiles.madhukar@gmail.com",
+      "maintainer": true
+    }
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/madhukartemba/PixelEngine",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/madhukartemba/PixelEngine.git"
+  },
+  "dependencies": [
+    {
+      "name": "Adafruit NeoPixel",
+      "frameworks": "arduino"
+    }
+  ],
+  "frameworks": ["arduino", "espidf"],
+  "platforms": ["*"],
+  "headers": "src/PixelEngine.h",
+  "build": {
+    "includeDir": "src"
+  }
+}

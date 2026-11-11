@@ -1,0 +1,5 @@
+dependencies:
+  espressif/led_strip: "^3.0.0"
+description: Layout-agnostic LED animation engine for rings and straight strips
+url: https://github.com/madhukartemba/PixelEngine
+version: 0.1.0
