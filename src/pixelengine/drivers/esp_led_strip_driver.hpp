@@ -7,6 +7,7 @@
 #if defined(ESP_PLATFORM) && !defined(ARDUINO)
 
 #include <algorithm>
+#include <cstring>
 #include <vector>
 
 #include "esp_log.h"
@@ -29,13 +30,16 @@ class EspLedStripDriver : public LedDriver {
     }
 
     void begin() override {
-        led_strip_config_t cfg = {
-            .strip_gpio_num = gpio_,
-            .max_leds = static_cast<uint32_t>(led_count_),
-        };
-        led_strip_rmt_config_t rmt = {
-            .resolution_hz = 10 * 1000 * 1000,
-        };
+        led_strip_config_t cfg;
+        std::memset(&cfg, 0, sizeof(cfg));
+        cfg.strip_gpio_num = gpio_;
+        cfg.max_leds = static_cast<uint32_t>(led_count_);
+
+        led_strip_rmt_config_t rmt;
+        std::memset(&rmt, 0, sizeof(rmt));
+        rmt.resolution_hz = 10 * 1000 * 1000;
+        rmt.flags.with_dma = false;
+
         esp_err_t err = led_strip_new_rmt_device(&cfg, &rmt, &strip_);
         if (err != ESP_OK) {
             ESP_LOGE("PixelEngine", "led_strip init failed: %s", esp_err_to_name(err));
