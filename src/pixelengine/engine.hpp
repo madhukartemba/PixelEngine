@@ -32,6 +32,27 @@ class AnimationEngine {
         }
     }
 
+    /** Swap the current animation immediately (no crossfade / queue). */
+    void setAnimationImmediate(std::unique_ptr<Animation> anim) {
+        while (!queue_.empty()) {
+            queue_.pop();
+        }
+        next_.reset();
+        next_drawn_ = false;
+        /* Drive fader to complete so fading() is false. */
+        fader_.start(0.0f, 1000.0f);
+        fader_.update(1.0f);
+        current_ = std::move(anim);
+        current_drawn_ = false;
+        if (current_) {
+            current_->update();
+            current_drawn_ = true;
+            if (driver_) {
+                driver_->show(current_->frame());
+            }
+        }
+    }
+
     void update(float dt) {
         bool dirty = false;
 

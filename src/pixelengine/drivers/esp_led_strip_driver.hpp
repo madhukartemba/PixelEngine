@@ -34,10 +34,14 @@ class EspLedStripDriver : public LedDriver {
         std::memset(&cfg, 0, sizeof(cfg));
         cfg.strip_gpio_num = gpio_;
         cfg.max_leds = static_cast<uint32_t>(led_count_);
+        cfg.led_model = LED_MODEL_WS2812;
+        cfg.color_component_format = LED_STRIP_COLOR_COMPONENT_FMT_GRB;
 
         led_strip_rmt_config_t rmt;
         std::memset(&rmt, 0, sizeof(rmt));
         rmt.resolution_hz = 10 * 1000 * 1000;
+        /* Larger symbol buffer reduces mid-frame glitches under BLE load. */
+        rmt.mem_block_symbols = 64;
         rmt.flags.with_dma = false;
 
         esp_err_t err = led_strip_new_rmt_device(&cfg, &rmt, &strip_);
@@ -53,10 +57,13 @@ class EspLedStripDriver : public LedDriver {
         if (!strip_) {
             return;
         }
-        const size_t n = std::min(frame.size(), led_count_);
-        for (size_t i = 0; i < n; ++i) {
-            led_strip_set_pixel(strip_, i, Color::r(frame[i]), Color::g(frame[i]),
-                                Color::b(frame[i]));
+        for (size_t i = 0; i < led_count_; ++i) {
+            if (i < frame.size()) {
+                led_strip_set_pixel(strip_, i, Color::r(frame[i]), Color::g(frame[i]),
+                                    Color::b(frame[i]));
+            } else {
+                led_strip_set_pixel(strip_, i, 0, 0, 0);
+            }
         }
         led_strip_refresh(strip_);
     }

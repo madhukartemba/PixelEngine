@@ -159,6 +159,15 @@ class PixelEngine {
 
     void addAnimation(std::unique_ptr<Animation> anim) { push(std::move(anim)); }
 
+    /** Instant swap — used for OTA success/error flashes. */
+    void setAnimationImmediate(std::unique_ptr<Animation> anim) {
+        if (!engine_ || !anim) {
+            return;
+        }
+        anim->setLayout(layout_);
+        engine_->setAnimationImmediate(std::move(anim));
+    }
+
    private:
     void push(std::unique_ptr<Animation> anim) {
         if (!engine_ || !anim) {
